@@ -8,6 +8,7 @@ import com.example.simpleuser.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -21,7 +22,8 @@ import java.util.Optional;
 public class JWTAuthorization extends BasicAuthenticationFilter {
     private final UserService repo;
 
-    public JWTAuthorization(AuthenticationManager manager,UserService repo) {
+
+    public JWTAuthorization(AuthenticationManager manager, UserService repo) {
         super(manager);
         this.repo = repo;
     }

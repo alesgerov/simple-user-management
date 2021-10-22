@@ -8,11 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/account")
 public class IndexController {
 
     private final ShortcutUtils shortcutUtils;
@@ -24,13 +27,25 @@ public class IndexController {
     }
 
 
-    @PostMapping("/account/signup")
+    @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm form,
                                           BindingResult result){
         if (result.hasErrors()){
             return ResponseEntity.status(422).body(shortcutUtils.getValidationErrors(result));
         }
         return ResponseEntity.status(201).body(userService.saveUser(form));
+    }
+
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getUser(HttpServletResponse response){
+        if (userService.isLogged()){
+            Map<String,String> map=new HashMap<>();
+            map.put("username",userService.getCurrentUsername());
+            return ResponseEntity.ok(map);
+        }
+
+        return ResponseEntity.status(401).body("sehv");
     }
 
 }
