@@ -46,8 +46,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthentication(authenticationManager()))
                 .addFilter(new JWTAuthorization(authenticationManager(), this.repo))
                 .authorizeRequests()
-                .antMatchers("/api/authorize").permitAll()
-                .antMatchers("/api/account/signup").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/authorize").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/account/signup").permitAll()
                 .anyRequest().authenticated()
         ;
 
@@ -78,6 +78,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(userDetailsClassService);
         return provider;
     }
+
 
 }
 
