@@ -1,6 +1,5 @@
 package com.example.simpleuser.controller;
 
-import com.example.simpleuser.dto.UserDTO;
 import com.example.simpleuser.form.RegistrationForm;
 import com.example.simpleuser.service.UserService;
 import com.example.simpleuser.utils.ShortcutUtils;
@@ -8,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +26,8 @@ public class IndexController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm form,
-                                          BindingResult result){
-        if (result.hasErrors()){
+                                          BindingResult result) {
+        if (result.hasErrors()) {
             return ResponseEntity.status(422).body(shortcutUtils.getValidationErrors(result));
         }
         return ResponseEntity.status(201).body(userService.saveUser(form));
@@ -38,14 +35,9 @@ public class IndexController {
 
 
     @GetMapping("/me")
-    public ResponseEntity<?> getUser(HttpServletResponse response){
-        if (userService.isLogged()){
-            Map<String,String> map=new HashMap<>();
-            map.put("username",userService.getCurrentUsername());
-            return ResponseEntity.ok(map);
-        }
-
-        return ResponseEntity.status(401).body("sehv");
+    public ResponseEntity<?> getUser() {
+        Map<String, String> map = new HashMap<>();
+        map.put("username", userService.getCurrentUsername());
+        return ResponseEntity.ok(map);
     }
-
 }

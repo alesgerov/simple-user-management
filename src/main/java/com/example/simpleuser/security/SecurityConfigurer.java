@@ -1,5 +1,6 @@
 package com.example.simpleuser.security;
 
+import com.example.simpleuser.controller.advice.ExceptionController;
 import com.example.simpleuser.security.jwt.JWTAuthorization;
 import com.example.simpleuser.security.jwt.JwtAuthentication;
 import com.example.simpleuser.security.users.UserDetailsClassService;
@@ -52,7 +53,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/api/account/signup").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                .exceptionHandling().authenticationEntryPoint(new ExceptionController())
         ;
 
     }
