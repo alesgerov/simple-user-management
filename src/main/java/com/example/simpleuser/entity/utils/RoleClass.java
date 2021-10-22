@@ -1,4 +1,4 @@
-package com.example.simpleuser.entity;
+package com.example.simpleuser.entity.utils;
 
 public class RoleClass {
     public static final String ADMIN_ROLE = "ROLE_ADMIN";

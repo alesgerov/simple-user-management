@@ -1,6 +1,7 @@
 package com.example.simpleuser.entity;
 
 
+import com.example.simpleuser.entity.utils.RoleClass;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
