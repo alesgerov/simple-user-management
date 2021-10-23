@@ -18,8 +18,8 @@ public class RegistrationForm {
     @NotBlank(message = "İstifadəçi adı boş ola bilməz")
     private String username;
 
-    @Size(min = 8,message = "En az 8 simvol olmalidir")
+    @Size(min = 8, message = "En az 8 simvol olmalidir")
     @NotBlank(message = "Şifrə boş ola bilməz")
-    private String  password;
+    private String password;
 }
 

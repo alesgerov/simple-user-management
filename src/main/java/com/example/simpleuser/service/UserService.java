@@ -23,7 +23,7 @@ public class UserService {
         this.passwordService = passwordService;
     }
 
-    public boolean isRegistered(String  username){
+    public boolean isRegistered(String username) {
         return getUserByUsername(username).isPresent();
     }
 
@@ -31,22 +31,23 @@ public class UserService {
         return repository.findByUsername(username);
     }
 
-    public UserDTO saveUser(RegistrationForm form){
-        UserTable table=new UserTable();
+    public UserDTO saveUser(RegistrationForm form) {
+        UserTable table = new UserTable();
         String hashedPw = passwordService.hashPassword(form.getPassword());
         table.setPassword(hashedPw);
         table.setUsername(form.getUsername());
-        table=repository.save(table);
-        if (table!=null){
+        table = repository.save(table);
+        if (table != null) {
             return new UserDTO(form.getUsername());
         }
         return null;
     }
 
-    public  boolean isLogged() {
+    public boolean isLogged() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return !(authentication instanceof AnonymousAuthenticationToken);
     }
+
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getName();

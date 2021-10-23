@@ -8,7 +8,6 @@ import com.example.simpleuser.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -31,30 +30,30 @@ public class JWTAuthorization extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String  header=request.getHeader(JWTProperties.HEADER);
-        if (header==null || !header.startsWith(JWTProperties.TOKEN_PRE)){
-            chain.doFilter(request,response);
+        String header = request.getHeader(JWTProperties.HEADER);
+        if (header == null || !header.startsWith(JWTProperties.TOKEN_PRE)) {
+            chain.doFilter(request, response);
             return;
         }
-        Authentication authentication=getUsernamePasswordAuthentication(request);
+        Authentication authentication = getUsernamePasswordAuthentication(request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
-        String token=request.getHeader(JWTProperties.HEADER);
-        if (token!=null){
-            String username= JWT.require(Algorithm.HMAC512(JWTProperties.SECRET.getBytes()))
+        String token = request.getHeader(JWTProperties.HEADER);
+        if (token != null) {
+            String username = JWT.require(Algorithm.HMAC512(JWTProperties.SECRET.getBytes()))
                     .build()
-                    .verify(token.replace(JWTProperties.TOKEN_PRE,""))
+                    .verify(token.replace(JWTProperties.TOKEN_PRE, ""))
                     .getSubject();
 
-            if (username!=null){
-                Optional<UserTable> userClass=repo.getUserByUsername(username);
+            if (username != null) {
+                Optional<UserTable> userClass = repo.getUserByUsername(username);
                 if (userClass.isPresent()) {
                     UserDetailsClass principal = new UserDetailsClass(userClass.get());
                     return new UsernamePasswordAuthenticationToken(
-                            username,null,principal.getAuthorities()
+                            username, null, principal.getAuthorities()
                     );
                 }
 

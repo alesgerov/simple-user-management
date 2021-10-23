@@ -12,10 +12,10 @@ import java.io.IOException;
 
 
 @RestControllerAdvice
-public class ExceptionController  implements AuthenticationEntryPoint{
+public class ExceptionController implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        String message= """
+        String message = """
                 {
                 \t\t"title": "Girish qadagandir",
                 \t\t"detail": "Bu sehifeye girish ucun token elde etmelisiniz"
