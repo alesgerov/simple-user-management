@@ -86,7 +86,7 @@ public class IndexControllerTest {
     }
 
     @Test
-    public void testRegisterUserUnSuccessfulValidation() throws Exception {
+    public void testRegisterUserUnSuccessfulValidationOfPasswordSize() throws Exception {
         String uri = "/api/account/signup";
         RegistrationForm form = new RegistrationForm("user112", "padd");
         mockMvc.perform(post(uri)
@@ -94,6 +94,18 @@ public class IndexControllerTest {
                         .content(Utils.objectToJson(form)))
                 .andExpect(status().is(422));
     }
+
+    @Test
+    public void testRegisterUserUnSuccessfulValidationOfPasswordAndUsername() throws Exception {
+        String uri = "/api/account/signup";
+        RegistrationForm form = new RegistrationForm("", "");
+        mockMvc.perform(post(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Utils.objectToJson(form)))
+                .andExpect(status().is(422));
+    }
+
+
 }
 
 
