@@ -13,12 +13,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/account")
-public class IndexController {
+public class AccountController {
 
     private final ShortcutUtils shortcutUtils;
     private final UserService userService;
 
-    public IndexController(ShortcutUtils shortcutUtils, UserService userService) {
+    public AccountController(ShortcutUtils shortcutUtils, UserService userService) {
         this.shortcutUtils = shortcutUtils;
         this.userService = userService;
     }

@@ -5,7 +5,6 @@ import com.example.simpleuser.entity.UserTable;
 import com.example.simpleuser.form.RegistrationForm;
 import com.example.simpleuser.password.PasswordService;
 import com.example.simpleuser.repo.UserRepository;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -43,10 +42,6 @@ public class UserService {
         return null;
     }
 
-    public boolean isLogged() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return !(authentication instanceof AnonymousAuthenticationToken);
-    }
 
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

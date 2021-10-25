@@ -12,7 +12,7 @@ import java.util.List;
 public class UserDetailsClass implements UserDetails {
 
 
-    private UserTable user;
+    private final UserTable user;
 
     public UserDetailsClass(UserTable user) {
         this.user = user;

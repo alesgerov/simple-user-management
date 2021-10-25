@@ -1,13 +1,13 @@
 package com.example.simpleuser.security;
 
-import com.example.simpleuser.controller.advice.ExceptionController;
+import com.example.simpleuser.controller.exceptioncontroller.AuthExceptionHandler;
 import com.example.simpleuser.security.jwt.JWTAuthorization;
 import com.example.simpleuser.security.jwt.JwtAuthentication;
 import com.example.simpleuser.security.users.UserDetailsClassService;
 import com.example.simpleuser.service.UserService;
+import com.example.simpleuser.utils.ShortcutUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,8 +16,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+
+import javax.validation.Validator;
 
 
 @Configuration
@@ -26,11 +26,16 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsClassService userDetailsClassService;
     private final UserService repo;
+    private final ShortcutUtils utils;
+    private final Validator validator;
+
 
     public SecurityConfigurer(UserDetailsClassService userDetailsClassService,
-                              UserService repo) {
+                              UserService repo, ShortcutUtils utils, Validator validator) {
         this.userDetailsClassService = userDetailsClassService;
         this.repo = repo;
+        this.utils = utils;
+        this.validator = validator;
     }
 
     @Override
@@ -45,14 +50,14 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtAuthentication(authenticationManager()))
+                .addFilter(new JwtAuthentication(validator, authenticationManager(), utils))
                 .addFilter(new JWTAuthorization(authenticationManager(), this.repo))
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/authorize").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/account/signup").permitAll()
+                .antMatchers("/api/authorize").permitAll()
+                .antMatchers("/api/account/signup").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new ExceptionController())
+                .exceptionHandling().authenticationEntryPoint(new AuthExceptionHandler())
         ;
 
     }
@@ -63,13 +68,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-
-    @Bean
-    public AuthenticationSuccessHandler successHandler() {
-        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
-        handler.setUseReferer(true);
-        return handler;
-    }
 
 //
 
